@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHA Martin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url(MHA\ Martin.jpg); /* Pôvodné pozadie */
+            background-size: cover; /* Aby sa pozadie prispôsobilo */
+            height: 100vh;
+            transition: background-color 0.5s ease; /* Prechod pozadia */
+        }
+        header {
+            background-color: rgba(0, 0, 255, 0.8);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid #00f;
+            position: relative;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        .logo-circle img {
+            width: 100%;
+            height: auto;
+        }
+        .link-container {
+            text-align: center; /* Zarovná na stred */
+            flex: 1; /* Aby sa oddeľoval priestor */
+        }
+        .link-container a {
+            text-decoration: none;
+            color: #00f;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px; /* Pridané padding */
+            background-color: white; /* Pozadie tlačidla */
+            border-radius: 25px; /* Zaoblenie rohov */
+            transition: background-color 0.3s, color 0.3s, transform 0.3s ease; /* Prechod */
+        }
+        .link-container a:hover {
+            background-color: #007bbf; /* Zmena farby na hover */
+            color: white; /* Text biely na hover */
+        }
+        .button-group-header {
+            display: flex;
+            justify-content: flex-end; /* Zarovnanie tlačidiel na pravej strane */
+        }
+        .button-group-header button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: white;
+            color: #00f;
+            border-radius: 25px;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s ease;
+        }
+        .button-group-header button:hover {
+            background-color: #007bbf;
+            color: #fff;
+            transform: scale(1.1);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .modal-content {
+            background-color: #333;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #00f;
+            width: 300px;
+            border-radius: 15px;
+            color: white;
+        }
+        .modal-content input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #00f;
+            background-color: #555;
+            color: white;
+            border-radius: 15px;
+        }
+        .show-password {
+            cursor: pointer;
+            color: #00f;
+            text-decoration: underline;
+            margin-top: -30px;
+            margin-bottom: 10px;
+            margin-left: 5px;
+        }
+        .close {
+            color: red;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        #success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 25px;
+            display: none;
+            margin: 10px 0;
+        }
+        #user-account {
+            color: white;
+        }
+        .admin-panel {
+            display: none;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* Mierne priehľadný biely podklad */
+            padding: 20px;
+            border-radius: 15px; /* Zaoblenie rohov */
+        }
+        .admin-panel h2, .admin-panel h3 {
+            color: black; /* Čierny text v admin paneli */
+        }
+        .user-list {
+            color: black; /* Text pre používateľský zoznam */
+            margin-top: 10px;
+        }
+        .user {
+            margin: 5px 0;
+        }
+        .user button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .user button:hover {
+            background-color: #cc0000;
+        }
+        .reset-password-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #00c700;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .reset-password-button:hover {
+            background-color: #009900;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <div class="logo-circle">
+            <img src="Sťahovanie.png" alt="MHA Martin Logo">
+        </div>
+        <h1>MHA Martin</h1>
+    </div>
+
+    <div class="link-container">
+        <a href="https://mhamartin.hockeyslovakia.sk/sk/" target="_blank">Oficiálna stránka MHA Martin</a>
+    </div>
+
+    <div id="success-message"></div>
+
+    <div class="button-group-header" id="auth-buttons">
+        <button onclick="otvorPrihlasenie()">Prihlásiť sa</button>
+        <button onclick="otvorRegistraciu()">Registrovať sa</button>
+    </div>
+
+    <div id="user-account"></div>
+</header>
+
+<!-- Prihlasovacie okno -->
+<div id="prihlasenieModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="zatvorModal('prihlasenieModal')">&times;</span>
+        <h2>Prihlásenie</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="heslo" placeholder="Heslo">
+        <span class="show-password" onclick="togglePassword('heslo')">Zobraziť heslo</span>
+        <button onclick="odoslatPrihlasenie()">Prihlásiť sa</button>
+        <p id="prihlasenieError" class="error-message"></p>
+    </div>
+</div>
+
+<!-- Registračné okno -->
+<div id="registraciaModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="zatvorModal('registraciaModal')">&times;</span>
+        <h2>Registrácia</h2>
+        <input type="email" id="regEmail" placeholder="Email">
+        <input type="password" id="regHeslo" placeholder="Heslo">
+        <span class="show-password" onclick="togglePassword('regHeslo')">Zobraziť heslo</span>
+        <input type="text" id="telefon" placeholder="Telefónne číslo">
+        <input type="date" id="datum" placeholder="Dátum narodenia">
+        <button onclick="odoslatRegistraciu()">Registrovať sa</button>
+        <p id="registraciaError" class="error-message"></p>
+    </div>
+</div>
+
+<!-- Admin Panel -->
+<div class="admin-panel" id="adminPanel">
+    <h2>Admin Panel</h2>
+    <h3>Zaregistrovaní používatelia:</h3>
+    <div class="user-list" id="userList"></div>
+</div>
+
+<script>
+    const adminEmail = "janko.chmelik@gmail.com";
+    const adminPassword = "123456"; // Predvolené heslo pre admina
+    let loggedInUser = null; // Aktuálne prihlásený používateľ
+
+    function otvorPrihlasenie() {
+        document.getElementById('prihlasenieModal').style.display = 'block';
+    }
+
+    function otvorRegistraciu() {
+        document.getElementById('registraciaModal').style.display = 'block';
+    }
+
+    function zatvorModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Funkcia na zobrazenie hesla
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // Funkcia na registráciu
+    function odoslatRegistraciu() {
+        const email = document.getElementById('regEmail').value;
+        const heslo = document.getElementById('regHeslo').value;
+        const telefon = document.getElementById('telefon').value;
+        const datum = document.getElementById('datum').value;
+
+        // Kontrola, či je email už registrovaný
+        if (localStorage.getItem(email)) {
+            document.getElementById('registraciaError').textContent = "Tento email už je registrovaný.";
+            return;
+        }
+
+        // Uloženie údajov do localStorage
+        const userData = {
+            password: heslo,
+            phone: telefon,
+            birthDate: datum
+        };
+        localStorage.setItem(email, JSON.stringify(userData));
+        zobrazSpravu('Registrácia bola úspešná!');
+        zatvorModal('registraciaModal');
+    }
+
+    // Funkcia na prihlásenie
+    function odoslatPrihlasenie() {
+        const email = document.getElementById('email').value;
+        const heslo = document.getElementById('heslo').value;
+        const userData = localStorage.getItem(email); // Načíta uložené heslo
+
+        if (email === adminEmail && heslo === adminPassword) {
+            loggedInUser = email; // Uloží prihláseného používateľa ako admin
+            document.body.style.backgroundColor = 'white'; // Nastav pozadie na biele
+            zobrazSpravu("Prihlásenie ako administrátor bolo úspešné!");
+            zobrazKonto(email);
+            document.getElementById('adminPanel').style.display = 'block';
+            zobrazZoznamPouzivatelov();
+            zatvorModal('prihlasenieModal');
+        } else if (userData === null) {
+            document.getElementById('prihlasenieError').textContent = "Používateľ neexistuje.";
+        } else {
+            const parsedData = JSON.parse(userData);
+            if (heslo === parsedData.password) {
+                loggedInUser = email; // Uloží prihláseného používateľa
+                zobrazSpravu("Prihlásenie bolo úspešné!");
+                zobrazKonto(email);
+                zatvorModal('prihlasenieModal');
+            } else {
+                document.getElementById('prihlasenieError').textContent = "Nesprávne heslo.";
+            }
+        }
+    }
+
+    // Funkcia pre zobrazenie správy
+    function zobrazSpravu(sprava) {
+        const successMessageDiv = document.getElementById('success-message');
+        successMessageDiv.textContent = sprava;
+        successMessageDiv.style.display = 'block';
+        setTimeout(() => {
+            successMessageDiv.style.display = 'none';
+        }, 3000);
+    }
+
+    // Funkcia pre zobrazenie konta
+    function zobrazKonto(email) {
+        document.getElementById('user-account').textContent = `Prihlásený používateľ: ${email}`;
+        document.getElementById('auth-buttons').style.display = 'none';
+
+        const logoutButton = document.createElement('button');
+        logoutButton.textContent = "Odhlásiť sa";
+        logoutButton.onclick = odhlasitSa;
+        logoutButton.style.marginLeft = '10px';
+        logoutButton.style.padding = '10px 20px';
+        logoutButton.style.fontSize = '16px';
+        logoutButton.style.border = 'none';
+        logoutButton.style.backgroundColor = 'white';
+        logoutButton.style.color = '#00f';
+        logoutButton.style.borderRadius = '25px';
+        logoutButton.style.transition = 'background-color 0.3s, color 0.3s, transform 0.3s ease';
+        logoutButton.onmouseover = function() {
+            logoutButton.style.backgroundColor = '#007bbf';
+            logoutButton.style.color = '#fff';
+            logoutButton.style.transform = 'scale(1.1)';
+        };
+        logoutButton.onmouseout = function() {
+            logoutButton.style.backgroundColor = 'white';
+            logoutButton.style.color = '#00f';
+            logoutButton.style.transform = 'scale(1)';
+        };
+
+        document.getElementById('user-account').appendChild(logoutButton);
+    }
+
+    // Funkcia na odhlásenie
+    function odhlasitSa() {
+        loggedInUser = null; // Vymaže prihláseného používateľa
+        document.getElementById('user-account').textContent = '';
+        document.getElementById('auth-buttons').style.display = 'flex';
+        document.getElementById('adminPanel').style.display = 'none';
+        document.body.style.backgroundColor = ''; // Obnoví pôvodné pozadie
+        document.getElementById('userList').innerHTML = ''; // Vymaže zoznam používateľov
+    }
+
+    // Zobrazenie zoznamu používateľov
+    function zobrazZoznamPouzivatelov() {
+        const userList = document.getElementById('userList');
+        userList.innerHTML = ''; // Vymaže existujúci zoznam
+
+        // Načíta a zobrazuje všetkých používateľov z localStorage
+        for (let i = 0; i < localStorage.length; i++) {
+            const email = localStorage.key(i);
+            const userData = JSON.parse(localStorage.getItem(email));
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'user';
+            userDiv.textContent = `Email: ${email}, Telefón: ${userData.phone}, Dátum narodenia: ${userData.birthDate}`;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Vymazať';
+            deleteButton.onclick = () => vymazatPouzivatela(email);
+            userDiv.appendChild(deleteButton);
+
+            const resetPasswordButton = document.createElement('button');
+            resetPasswordButton.textContent = 'Resetovať heslo';
+            resetPasswordButton.onclick = () => resetovatHeslo(email);
+            userDiv.appendChild(resetPasswordButton);
+
+            userList.appendChild(userDiv);
+    }
+
+        }
+    // Funkcia na vymazanie používateľa
+    function vymazatPouzivatela(email) {
+        localStorage.removeItem(email); // Odstráni používateľa z localStorage
+        zobrazSpravu(`Používateľ ${email} bol vymazaný.`);
+        zobrazZoznamPouzivatelov(); // Aktualizuje zoznam
+    }
+
+    // Funkcia na resetovanie hesla
+    function resetovatHeslo(email) {
+        const newPassword = prompt(`Zadajte nové heslo pre ${email}:`);
+        if (newPassword) {
+            const userData = JSON.parse(localStorage.getItem(email));
+            userData.password = newPassword; // Aktualizuje heslo
+            localStorage.setItem(email, JSON.stringify(userData));
+            zobrazSpravu(`Heslo pre ${email} bolo resetované.`);
+        }
+    }
+</script>
+
+</body>
+</html>
